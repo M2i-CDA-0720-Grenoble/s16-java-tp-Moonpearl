@@ -7,9 +7,23 @@ public class ColorCombination {
     
     private Color[] colors;
 
+    public static ColorCombination createRandom(int size)
+    {
+        Color[] colors = new Color[size];
+        for (int i = 0; i < size; i += 1) {
+            colors[i] = Color.findRandom();
+        }
+        return new ColorCombination(colors);
+    }
+
     public ColorCombination(String colorString)
     {
         colors = Color.fromString(colorString);
+    }
+
+    public ColorCombination(Color[] colors)
+    {
+        this.colors = colors;
     }
 
     public Color[] getColors()

@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.Random;
+
 import Utils.ConsoleColor;
 
 public enum Color {
@@ -50,6 +52,13 @@ public enum Color {
         }
 
         return result;
+    }
+
+    public static Color findRandom()
+    {
+        Random random = new Random();
+        Color[] colors = Color.values();
+        return colors[ random.nextInt(colors.length) ];
     }
 
     public char getCode()

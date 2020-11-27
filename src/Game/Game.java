@@ -27,7 +27,7 @@ public class Game {
     public void init()
     {
         // Définit la solution du jeu
-        solutionCombination = new ColorCombination("MMCR");
+        solutionCombination = ColorCombination.createRandom(combinationLength);
 
         System.out.println(ConsoleColor.CYAN + "L'ordinateur a choisi une combinaison et attend vos propositions...\n" + ConsoleColor.RESET);
     }
