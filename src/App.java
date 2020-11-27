@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.*;
@@ -33,60 +35,43 @@ public class App
             if (Pattern.matches("^[RVBJCM]{4}$", userInput)) {
                 char[] userInputArray = userInput.toCharArray();
                 
+                ArrayList<Character> incorrectUserInputCharacters = new ArrayList<>();
+                ArrayList<Character> incorrectSolutionCharacters = new ArrayList<>();
                 // Compte le nombre de couleurs bien placées dans la saisie de l'utilisateur
                 int correct = 0;
                 for (int i = 0; i < 4; i += 1) {
                     if (userInputArray[i] == solutionArray[i]) {
                         correct += 1;
+                    // Retient les couleurs qui ne sont pas bien placés pour l'étape suivante
+                    } else {
+                        incorrectUserInputCharacters.add(userInputArray[i]);
+                        incorrectSolutionCharacters.add(solutionArray[i]);
                     }
-                }
-                System.out.println("Vous avez " + correct + " couleurs bien placées.");
-
-                // Compte le nombre de couleurs dans la solution
-                HashMap<Character, Integer> solutionColorCount = new HashMap<>() {
-                    {
-                        put('R', 0);
-                        put('V', 0);
-                        put('B', 0);
-                        put('C', 0);
-                        put('J', 0);
-                        put('M', 0);
-                    }
-                };
-                for (char color: solutionArray) {
-                    // Récupère quantité actuelle de cette couleur
-                    int currentColorCount = solutionColorCount.get(color);
-                    // Remplace la quantité actuelle de cette couleur en lui ajoutant 1
-                    solutionColorCount.put(color, currentColorCount + 1);
-                }
-
-                // Compte le nombre de couleurs dans la solution
-                HashMap<Character, Integer> userInputColorCount = new HashMap<>() {
-                    {
-                        put('R', 0);
-                        put('V', 0);
-                        put('B', 0);
-                        put('C', 0);
-                        put('J', 0);
-                        put('M', 0);
-                    }
-                };
-                for (char color: userInputArray) {
-                    // Récupère quantité actuelle de cette couleur
-                    int currentColorCount = userInputColorCount.get(color);
-                    // Remplace la quantité actuelle de cette couleur en lui ajoutant 1
-                    userInputColorCount.put(color, currentColorCount + 1);
                 }
                 
-                // Compte le nombre de chaque couleur dans la saisie de l'utilisateur absentes de la solution
+                // Compte le nombre de couleurs, parmi les couleurs qui ne sont pas bien placées,
+                // qui sont en trop par rapport aux couleurs restantes dans la solution
                 int absent = 0;
                 for (char color: App.COLORS) {
-                    int excess = userInputColorCount.get(color) - solutionColorCount.get(color);
+                    int excess = Collections.frequency(incorrectUserInputCharacters, color) - Collections.frequency(incorrectSolutionCharacters, color);
                     if (excess > 0) {
                         absent += excess;
                     }
                 }
-                System.out.println("Votre proposition contient " + absent + " couleurs absentes de la solution.");
+
+                int misplaced = 4 - correct - absent;
+
+                for (int i = 0; i < correct; i += 1) {
+                    System.out.print("O ");
+                }
+                for (int i = 0; i < misplaced; i += 1) {
+                    System.out.print("X ");
+                }
+                for (int i = 0; i < absent; i += 1) {
+                    System.out.print("- ");
+                }
+
+                System.out.println("");
 
             } else {
                 System.out.println(ConsoleColor.YELLOW + "Ceci n'est pas une combinaison valide!" + ConsoleColor.RESET);
