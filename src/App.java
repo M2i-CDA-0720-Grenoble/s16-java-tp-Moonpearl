@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -5,6 +6,8 @@ import Utils.ConsoleColor;
 
 public class App
 {
+    private static final char[] COLORS = {'R', 'V', 'B', 'C', 'J', 'M'};
+
     // Cette méthode est appelée automatiquement au lancement de l'application
     public static void main(String[] args) throws Exception {
         // Efface la console
@@ -38,6 +41,52 @@ public class App
                     }
                 }
                 System.out.println("Vous avez " + correct + " couleurs bien placées.");
+
+                // Compte le nombre de couleurs dans la solution
+                HashMap<Character, Integer> solutionColorCount = new HashMap<>() {
+                    {
+                        put('R', 0);
+                        put('V', 0);
+                        put('B', 0);
+                        put('C', 0);
+                        put('J', 0);
+                        put('M', 0);
+                    }
+                };
+                for (char color: solutionArray) {
+                    // Récupère quantité actuelle de cette couleur
+                    int currentColorCount = solutionColorCount.get(color);
+                    // Remplace la quantité actuelle de cette couleur en lui ajoutant 1
+                    solutionColorCount.put(color, currentColorCount + 1);
+                }
+
+                // Compte le nombre de couleurs dans la solution
+                HashMap<Character, Integer> userInputColorCount = new HashMap<>() {
+                    {
+                        put('R', 0);
+                        put('V', 0);
+                        put('B', 0);
+                        put('C', 0);
+                        put('J', 0);
+                        put('M', 0);
+                    }
+                };
+                for (char color: userInputArray) {
+                    // Récupère quantité actuelle de cette couleur
+                    int currentColorCount = userInputColorCount.get(color);
+                    // Remplace la quantité actuelle de cette couleur en lui ajoutant 1
+                    userInputColorCount.put(color, currentColorCount + 1);
+                }
+                
+                // Compte le nombre de chaque couleur dans la saisie de l'utilisateur absentes de la solution
+                int absent = 0;
+                for (char color: App.COLORS) {
+                    int excess = userInputColorCount.get(color) - solutionColorCount.get(color);
+                    if (excess > 0) {
+                        absent += excess;
+                    }
+                }
+                System.out.println("Votre proposition contient " + absent + " couleurs absentes de la solution.");
 
             } else {
                 System.out.println(ConsoleColor.YELLOW + "Ceci n'est pas une combinaison valide!" + ConsoleColor.RESET);
