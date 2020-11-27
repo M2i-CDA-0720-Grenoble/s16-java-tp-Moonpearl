@@ -41,6 +41,17 @@ public enum Color {
         return null;
     }
 
+    public static String getColorsAsString()
+    {
+        String result = "";
+
+        for (Color color: Color.values()) {
+            result += color.code;
+        }
+
+        return result;
+    }
+
     public char getCode()
     {
         return code;

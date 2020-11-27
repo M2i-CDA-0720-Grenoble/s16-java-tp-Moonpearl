@@ -9,11 +9,10 @@ import Utils.ConsoleColor;
 
 public class Game {
 
-    private static final char[] COLORS = {'R', 'V', 'B', 'C', 'J', 'M'};
-
-    Scanner scanner;
-    Color[] solutionColors;
-    boolean isRunning;
+    private Scanner scanner;
+    private Color[] solutionColors;
+    private boolean isRunning;
+    private int combinationLength = 4;
 
     public Game ()
     {
@@ -41,14 +40,14 @@ public class Game {
 
         // Vérifie si la saisie de l'utilisateur correspond au schéma attendu
         // (exactement 4 caractères parmi R, V, B, J, C et M, sans rien avant ni rien après)
-        if (Pattern.matches("^[RVBJCM]{4}$", userInput)) {
+        if (Pattern.matches("^[" + Color.getColorsAsString() + "]{" + combinationLength + "}$", userInput)) {
             Color[] userColors = Color.fromString(userInput);
             
             ArrayList<Color> incorrectUserInputColors = new ArrayList<>();
             ArrayList<Color> incorrectSolutionColors = new ArrayList<>();
             // Compte le nombre de couleurs bien placées dans la saisie de l'utilisateur
             int correct = 0;
-            for (int i = 0; i < 4; i += 1) {
+            for (int i = 0; i < combinationLength; i += 1) {
                 if (userColors[i] == solutionColors[i]) {
                     correct += 1;
                 // Retient les couleurs qui ne sont pas bien placés pour l'étape suivante
@@ -72,7 +71,7 @@ public class Game {
             }
 
             // Si l'utilisateur a rentré la combinaison exacte
-            if (correct == 4) {
+            if (correct == combinationLength) {
                 System.out.println(ConsoleColor.GREEN + "Bravo! Vous avez trouvé la bonne combinaison!" + ConsoleColor.RESET);
 
                 // Demande à l'utilisateur s'il souhait recommencer une nouvelle partie
@@ -94,7 +93,7 @@ public class Game {
                 return;
             }
 
-            int misplaced = 4 - correct - absent;
+            int misplaced = combinationLength - correct - absent;
 
             for (Color color: userColors) {
                 System.out.print(color);
