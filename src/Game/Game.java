@@ -12,7 +12,7 @@ public class Game {
     private static final char[] COLORS = {'R', 'V', 'B', 'C', 'J', 'M'};
 
     Scanner scanner;
-    char[] solutionArray;
+    Color[] solutionColors;
     boolean isRunning;
 
     public Game ()
@@ -30,7 +30,7 @@ public class Game {
     public void init()
     {
         // Définit la solution du jeu
-        solutionArray = "MMCR".toCharArray();
+        solutionColors = Color.fromString("MMCR");
     }
 
     public void update()
@@ -42,27 +42,27 @@ public class Game {
         // Vérifie si la saisie de l'utilisateur correspond au schéma attendu
         // (exactement 4 caractères parmi R, V, B, J, C et M, sans rien avant ni rien après)
         if (Pattern.matches("^[RVBJCM]{4}$", userInput)) {
-            char[] userInputArray = userInput.toCharArray();
+            Color[] userColors = Color.fromString(userInput);
             
-            ArrayList<Character> incorrectUserInputCharacters = new ArrayList<>();
-            ArrayList<Character> incorrectSolutionCharacters = new ArrayList<>();
+            ArrayList<Color> incorrectUserInputColors = new ArrayList<>();
+            ArrayList<Color> incorrectSolutionColors = new ArrayList<>();
             // Compte le nombre de couleurs bien placées dans la saisie de l'utilisateur
             int correct = 0;
             for (int i = 0; i < 4; i += 1) {
-                if (userInputArray[i] == solutionArray[i]) {
+                if (userColors[i] == solutionColors[i]) {
                     correct += 1;
                 // Retient les couleurs qui ne sont pas bien placés pour l'étape suivante
                 } else {
-                    incorrectUserInputCharacters.add(userInputArray[i]);
-                    incorrectSolutionCharacters.add(solutionArray[i]);
+                    incorrectUserInputColors.add(userColors[i]);
+                    incorrectSolutionColors.add(solutionColors[i]);
                 }
             }
             
             // Compte le nombre de couleurs, parmi les couleurs qui ne sont pas bien placées,
             // qui sont en trop par rapport aux couleurs restantes dans la solution
             int absent = 0;
-            for (char color: COLORS) {
-                int excess = Collections.frequency(incorrectUserInputCharacters, color) - Collections.frequency(incorrectSolutionCharacters, color);
+            for (Color color: Color.values()) {
+                int excess = Collections.frequency(incorrectUserInputColors, color) - Collections.frequency(incorrectSolutionColors, color);
                 // Si le nombre de couleurs en trop est négatif, c'est donc qu'il manque des couleurs de la solution
                 // dans la proposition de l'utilisateur
                 // Il ne faut pas les compter parmi les couleurs de la proposition absentes de la solution
@@ -96,6 +96,13 @@ public class Game {
 
             int misplaced = 4 - correct - absent;
 
+            for (Color color: userColors) {
+                System.out.print(color);
+                System.out.print(" ");
+            }
+
+            System.out.print("  =>   ");
+            
             for (int i = 0; i < correct; i += 1) {
                 System.out.print("O ");
             }
@@ -111,6 +118,8 @@ public class Game {
         } else {
             System.out.println(ConsoleColor.YELLOW + "Ceci n'est pas une combinaison valide!" + ConsoleColor.RESET);
         }
+
+        System.out.println("");
     }
 
     public void terminate()
